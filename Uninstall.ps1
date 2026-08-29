@@ -11,8 +11,11 @@ if (-not $root) { $root = (Get-Location).Path }
 if (-not $KeepMcp) {
   $claude = Get-Command claude -ErrorAction SilentlyContinue
   if ($claude) {
-    & claude mcp remove --scope user rimworldforge 2>$null
-    if ($LASTEXITCODE -eq 0) { Write-Host 'removed rimworldforge MCP from Claude Code user config' }
+    $claudeErrorPreference = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    & claude mcp remove --scope user rimworldforge 2>$null | Out-Null
+    $ErrorActionPreference = $claudeErrorPreference
+    Write-Host 'removed rimworldforge MCP from Claude Code user config (if present)'
   }
 }
 

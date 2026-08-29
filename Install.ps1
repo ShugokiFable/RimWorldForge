@@ -72,8 +72,13 @@ $claude = Get-Command claude -ErrorAction SilentlyContinue
 if ($claude) {
   Write-Host ''
   Write-Host '== Claude Code =='
-  & claude mcp add --scope user rimworldforge -- $vpy $serverPy 2>$null
-  if ($LASTEXITCODE -eq 0) { Write-Host 'added rimworldforge MCP (user scope)' } else { Write-Host 'rimworldforge MCP already registered or add failed' }
+$claudeErrorPreference = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+& claude mcp remove --scope user rimworldforge 2>$null | Out-Null
+& claude mcp add --scope user rimworldforge -- $vpy $serverPy 2>$null
+$ErrorActionPreference = $claudeErrorPreference
+$list = (claude mcp list 2>$null | Out-String)
+if ($list -match 'rimworldforge') { Write-Host 'rimworldforge MCP registered (user scope)' } else { Write-Warning 'claude mcp add failed' }
   $ccSkills = Join-Path $env:USERPROFILE '.claude\skills\rimworld-forge'
   if (-not (Test-Path $ccSkills)) {
     New-Item -ItemType Directory -Force -Path (Split-Path $ccSkills) | Out-Null
