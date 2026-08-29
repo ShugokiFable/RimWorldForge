@@ -2,9 +2,11 @@
   "schema": 1,
   "mod": {
     "name": "Pelagic Xenotype Example",
-    "packageId": "shugokifable.rwforge.pelagicexample",
-    "author": "ShugokiFable",
-    "supportedVersions": ["1.6"],
+    "packageId": "example.rimworldforge.pelagicexample",
+    "author": "YourName",
+    "supportedVersions": [
+      "1.6"
+    ],
     "description": "Teaching example for a Biotech xenotype. Search installed GeneDef/XenotypeDef examples before selecting real gene defNames.",
     "dependencies": [
       {
@@ -34,7 +36,10 @@
       "kind": "ui_icon",
       "target": "Textures/Shugoki/Pelagic/PelagicIcon.png",
       "transparent": true,
-      "canvas": [128, 128],
+      "canvas": [
+        128,
+        128
+      ],
       "notes": "Simple fin/gill silhouette with strong small-size readability."
     }
   ]

@@ -28,7 +28,7 @@ def write_about(path: Path, name: str, package_id: str, author: str, description
     tree.write(path, encoding="utf-8", xml_declaration=True)
 
 
-def new_project(name: str, package_id: str, author: str = "ShugokiFable", description: str = "Generated with RimWorldForge.", workspace: Path | None = None) -> dict:
+def new_project(name: str, package_id: str, author: str = "", description: str = "Generated with RimWorldForge.", workspace: Path | None = None) -> dict:
     if not PACKAGE_ID_RE.match(package_id) or "." not in package_id:
         raise ValueError("packageId should be globally distinctive and contain a dot, e.g. author.modname")
     root = (workspace or (Path.cwd() / safe_slug(name))).expanduser().resolve()

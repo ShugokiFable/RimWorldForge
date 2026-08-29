@@ -75,7 +75,7 @@ def parser() -> argparse.ArgumentParser:
 
     idx = sub.add_parser("index")
     idx.add_argument("--game")
-    idx.add_argument("--mods-root")
+    idx.add_argument("--mods-root", action="append", help="Extra mods directory to index (repeatable). Defaults to auto-discovery: game Mods folder + every Steam library Workshop root (or RIMWORLD_WORKSHOP_ROOT / RIMWORLD_MODS_ROOT env overrides).")
     idx.add_argument("--output")
 
     s = sub.add_parser("search")
@@ -102,7 +102,7 @@ def parser() -> argparse.ArgumentParser:
     pn = sub.add_parser("project-new")
     pn.add_argument("name")
     pn.add_argument("--package-id", required=True)
-    pn.add_argument("--author", default="ShugokiFable")
+    pn.add_argument("--author", default="")
     pn.add_argument("--description", default="Generated with RimWorldForge.")
     pn.add_argument("--workspace")
 
@@ -156,7 +156,9 @@ def main(argv: list[str] | None = None) -> int:
             result = capabilities()
         elif args.command == "index":
             game = require_game(args.game)
-            result = build_index(game, Path(args.mods_root) if args.mods_root else None, Path(args.output) if args.output else None)
+            extra = [Path(p) for p in args.mods_root] if getattr(args, "mods_root", None) else []
+            # explicit --mods-root REPLACES auto-discovery for predictability; no flag = discover everything
+            result = build_index(game, extra if extra else None, Path(args.output) if args.output else None)
         elif args.command == "search":
             result = {"ok": True, "results": search_index(args.query, args.type, Path(args.index) if args.index else None, args.limit)}
         elif args.command == "inspect":

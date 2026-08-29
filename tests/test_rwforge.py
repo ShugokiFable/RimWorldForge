@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -11,6 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+
+# Hermetic tests: never probe the real Steam libraries on the dev machine.
+os.environ.setdefault("RIMWORLD_FORGE_OFFLINE", "1")
 
 from rwforge.assets import emit_prompts
 from rwforge.blueprints import blueprint_from_def
@@ -151,6 +155,38 @@ class ForgeTests(unittest.TestCase):
             self.assertIn("Test_1.6_Defs", names)
             self.assertIn("Test_Common_Defs", names)
             self.assertNotIn("Test_Legacy", names)
+
+    def test_index_default_auto_discovers_workshop_roots(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "RimWorld"
+            (root / "Data" / "Core" / "Defs").mkdir(parents=True)
+            # game on library A (inside td), workshop content "elsewhere" (second dir in td)
+            ws = Path(td) / "OtherLibrary" / "steamapps" / "workshop" / "content" / "294100"
+            mod = ws / "555555"
+            (mod / "1.6" / "Defs").mkdir(parents=True)
+            (mod / "1.6" / "Defs" / "W.xml").write_text("<Defs><ThingDef><defName>Test_WSMod</defName></ThingDef></Defs>", encoding="utf-8")
+            # no libraryfolders.vdf inside td; point discovery at the second library via env
+            os.environ["RIMWORLD_WORKSHOP_ROOT"] = str(ws)
+            try:
+                index = Path(td) / "i.json"
+                build_index(root, output=index)  # no include_mods -> auto-discovery
+                names = {r["def_name"] for r in json.loads(index.read_text(encoding="utf-8"))["records"]}
+                self.assertIn("Test_WSMod", names)
+            finally:
+                os.environ.pop("RIMWORLD_WORKSHOP_ROOT", None)
+
+    def test_scan_mods_detects_framework_by_assembly_marker(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "RimWorld"
+            (root / "Data" / "Core" / "Defs").mkdir(parents=True)
+            mod = root / "Mods" / "RenamedHarmonyRepack"
+            (mod / "About").mkdir(parents=True)
+            mod.joinpath("About", "About.xml").write_text("<ModMetaData><name>Some Repack</name><packageId>who.knows</packageId><supportedVersions><li>1.6</li></supportedVersions></ModMetaData>", encoding="utf-8")
+            (mod / "1.6" / "Assemblies").mkdir(parents=True)
+            (mod / "1.6" / "Assemblies" / "0Harmony.dll").write_bytes(b"MZ")
+            result = scan_mods(root)
+            harmony = next(f for f in result["frameworks"] if f["name"] == "Harmony")
+            self.assertTrue(harmony["installed"])
 
     def test_log_analyzer_detects_duplicate_ref_storm(self):
         with tempfile.TemporaryDirectory() as td:

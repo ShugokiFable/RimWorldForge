@@ -108,6 +108,19 @@ $env:RIMWORLD_ROOT = 'D:\SteamLibrary\steamapps\common\RimWorld'
 rwforge doctor
 ```
 
+### Environment variables (all optional)
+
+| Variable | Purpose |
+|---|---|
+| `RIMWORLD_ROOT` | RimWorld install root, if registry/Steam discovery fails |
+| `RIMWORLD_WORKSHOP_ROOT` | Extra Steam Workshop content root(s) to scan for mods (`os.pathsep`-separated for several). Each may be either the `steamapps/workshop/content/294100` folder itself or its parent `steamapps/workshop` folder |
+| `RIMWORLD_MODS_ROOT` | Additional mods directory beyond the game's own `Mods` folder |
+| `RIMWORLD_FORGE_HOME` | Where the index is stored (defaults to the platform data directory) |
+
+`rwforge index` auto-discovers mods from the game's `Mods` folder plus **every Steam
+library's** Workshop content root found via `libraryfolders.vdf` — multi-drive Steam
+setups need no configuration. Pass `--mods-root` explicitly to replace auto-discovery.
+
 ## First real workflow
 
 ### 1. Index the installed game
@@ -125,7 +138,7 @@ The index is written under `%LOCALAPPDATA%\RimWorldForge\indexes` on Windows or 
 ### 2. Create a workspace
 
 ```text
-rwforge project-new "Warden Mech" --package-id shugokifable.wardenmech --workspace Workspaces/WardenMech
+rwforge project-new "Warden Mech" --package-id yourname.wardenmech --workspace Workspaces/WardenMech
 ```
 
 The live game is not touched. The workspace contains:

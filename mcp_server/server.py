@@ -32,7 +32,7 @@ def schema(properties: dict[str, Any], required: list[str] | None = None) -> dic
 TOOLS = [
     {"name": "rw_doctor", "description": "Detect RimWorld, DLCs, Managed assemblies, Mods folder and Player.log.", "inputSchema": schema({"game": {"type": "string"}})},
     {"name": "rw_capabilities", "description": "Return honest implemented/unsupported capability matrix and evidence tiers.", "inputSchema": schema({})},
-    {"name": "rw_index", "description": "Build a searchable Def index from Core + installed DLC and optionally local mods.", "inputSchema": schema({"game": {"type": "string"}, "mods_root": {"type": "string"}, "output": {"type": "string"}})},
+    {"name": "rw_index", "description": "Build a searchable Def index from Core + installed DLC. By default auto-discovers mods: game Mods folder plus every Steam library Workshop root (override with RIMWORLD_WORKSHOP_ROOT/RIMWORLD_MODS_ROOT env or mods_root).", "inputSchema": schema({"game": {"type": "string"}, "mods_root": {"type": "string"}, "output": {"type": "string"}})},
     {"name": "rw_def_search", "description": "Search the indexed vanilla/DLC Def corpus before inventing XML.", "inputSchema": schema({"query": {"type": "string"}, "def_type": {"type": "string"}, "index": {"type": "string"}, "limit": {"type": "integer", "minimum": 1, "maximum": 100}}, ["query"])},
     {"name": "rw_def_inspect", "description": "Inspect one indexed Def and return its source plus raw XML when available.", "inputSchema": schema({"def_name": {"type": "string"}, "index": {"type": "string"}}, ["def_name"])},
     {"name": "rw_project_new", "description": "Create a transactional RimWorld mod workspace outside the live game.", "inputSchema": schema({"name": {"type": "string"}, "package_id": {"type": "string"}, "author": {"type": "string"}, "description": {"type": "string"}, "workspace": {"type": "string"}}, ["name", "package_id"])},
@@ -60,7 +60,7 @@ def call_tool(name: str, a: dict[str, Any]) -> dict[str, Any]:
         found = inspect_def(a["def_name"], Path(a["index"]) if a.get("index") else None)
         return {"ok": bool(found), "def": found}
     if name == "rw_project_new":
-        return new_project(a["name"], a["package_id"], a.get("author", "ShugokiFable"), a.get("description", "Generated with RimWorldForge."), Path(a["workspace"]) if a.get("workspace") else None)
+        return new_project(a["name"], a["package_id"], a.get("author", ""), a.get("description", "Generated with RimWorldForge."), Path(a["workspace"]) if a.get("workspace") else None)
     if name == "rw_plan_validate":
         return validate_plan(read_json(Path(a["plan"])))
     if name == "rw_generate":

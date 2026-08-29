@@ -142,7 +142,7 @@ def apply_plan(workspace: Path, plan_path: Path) -> dict[str, Any]:
     mod = plan["mod"]
     write_about(
         source / "About" / "About.xml",
-        mod["name"], mod["packageId"], mod.get("author", "ShugokiFable"),
+        mod["name"], mod["packageId"], mod.get("author", ""),
         mod.get("description", "Generated with RimWorldForge."), mod.get("supportedVersions", ["1.6"]),
     )
     dependencies = mod.get("dependencies", [])

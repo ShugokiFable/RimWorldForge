@@ -95,7 +95,7 @@ def _mod_def_dirs(mod_dir: Path) -> list[Path]:
     return dirs
 
 
-def build_index(game_root: Path, include_mods: Path | None = None, output: Path | None = None) -> dict:
+def build_index(game_root: Path, include_mods: list[Path] | Path | None = None, output: Path | None = None) -> dict:
     records: list[DefRecord] = []
     errors: list[dict] = []
     data = game_root / "Data"
@@ -105,8 +105,17 @@ def build_index(game_root: Path, include_mods: Path | None = None, output: Path 
             found, bad = _read_defs(path, pack)
             records.extend(found)
             errors.extend(bad)
-    if include_mods and include_mods.is_dir():
-        for mod in sorted(p for p in include_mods.iterdir() if p.is_dir()):
+    if include_mods is None:
+        from .mods import mod_roots
+        mod_dirs = [root for origin, root in mod_roots(game_root)]
+    elif isinstance(include_mods, Path):
+        mod_dirs = [include_mods]
+    else:
+        mod_dirs = list(include_mods)
+    for mods_dir in mod_dirs:
+        if not mods_dir.is_dir():
+            continue
+        for mod in sorted(p for p in mods_dir.iterdir() if p.is_dir()):
             for defs_dir in _mod_def_dirs(mod):
                 for path in _iter_xml_files(defs_dir):
                     found, bad = _read_defs(path, f"mod:{mod.name}")

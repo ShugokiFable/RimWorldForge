@@ -2,9 +2,11 @@
   "schema": 1,
   "mod": {
     "name": "Warden Mech Example",
-    "packageId": "shugokifable.rwforge.wardenexample",
-    "author": "ShugokiFable",
-    "supportedVersions": ["1.6"],
+    "packageId": "example.rimworldforge.wardenexample",
+    "author": "YourName",
+    "supportedVersions": [
+      "1.6"
+    ],
     "description": "RimWorldForge teaching example for a heavy mech concept. Inspect current installed mech Defs before treating this as a shippable unit.",
     "dependencies": [
       {
@@ -55,7 +57,10 @@
       "kind": "pawn_directional",
       "target": "Textures/Shugoki/Warden/Warden_south.png",
       "transparent": true,
-      "canvas": [128, 128],
+      "canvas": [
+        128,
+        128
+      ],
       "direction": "south",
       "style": "RimWorld-compatible top-down sci-fi mech pawn sprite",
       "notes": "Broad ivory armor, dark joints, cyan sensor/emissive accents, integrated cannon arm. No ground or baked shadow."
@@ -65,7 +70,10 @@
       "kind": "pawn_directional",
       "target": "Textures/Shugoki/Warden/Warden_north.png",
       "transparent": true,
-      "canvas": [128, 128],
+      "canvas": [
+        128,
+        128
+      ],
       "direction": "north",
       "style": "Match the south sprite exactly in scale, materials and anchor."
     },
@@ -74,7 +82,10 @@
       "kind": "pawn_directional",
       "target": "Textures/Shugoki/Warden/Warden_east.png",
       "transparent": true,
-      "canvas": [128, 128],
+      "canvas": [
+        128,
+        128
+      ],
       "direction": "east",
       "style": "Match the other directions; preserve cannon silhouette. West may be mirrored only after visual review."
     }

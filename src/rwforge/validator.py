@@ -47,7 +47,8 @@ def validate_workspace(workspace: Path, vanilla_index: Path | None = None) -> di
             required = {tag: root.findtext(tag) for tag in ("name", "author", "packageId", "description")}
             for tag, text in required.items():
                 if not text or not text.strip():
-                    problems.append(_problem("error", f"about.{tag}", f"About.xml requires non-empty <{tag}>", str(about_path)))
+                    level = "warning" if tag == "author" else "error"
+                    problems.append(_problem(level, f"about.{tag}", f"About.xml should have a non-empty <{tag}>", str(about_path)))
             pid = (root.findtext("packageId") or "").strip()
             if pid and (not PACKAGE_ID_RE.match(pid) or "." not in pid):
                 problems.append(_problem("error", "about.packageId_format", "packageId must be distinctive, dot-qualified, and use letters/numbers/._-", str(about_path)))
