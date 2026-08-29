@@ -1,0 +1,35 @@
+{
+  "id": "game-rimworld",
+  "title": "RimWorld mod engineering (RimWorldForge)",
+  "scope": "project",
+  "why": "RimWorldForge indexes installed Core/DLC Defs, generates and validates mod XML, packages builds, and diagnoses Player.log. Its MCP belongs only in a RimWorld mod project; elsewhere the skill remains installed at effectively zero standing context cost.",
+  "detect": {
+    "files": [
+      "forge.json",
+      "About/About.xml",
+      "source/About/About.xml"
+    ],
+    "globs": [
+      "Defs/*.xml",
+      "Patches/*.xml"
+    ]
+  },
+  "servers": [
+    {
+      "id": "rimworldforge",
+      "command": "%RIMWORLD_FORGE_ROOT%\\.venv\\Scripts\\python.exe",
+      "args": [
+        "%RIMWORLD_FORGE_ROOT%\\mcp_server\\server.py"
+      ],
+      "note": "RimWorld 1.6 Def indexing, mod generation, validation, builds and log diagnosis",
+      "key": null,
+      "requires": {
+        "command": "%RIMWORLD_FORGE_ROOT%\\.venv\\Scripts\\python.exe",
+        "env": "RIMWORLD_FORGE_ROOT",
+        "any_path": [
+          "%RIMWORLD_FORGE_ROOT%\\mcp_server\\server.py"
+        ]
+      }
+    }
+  ]
+}

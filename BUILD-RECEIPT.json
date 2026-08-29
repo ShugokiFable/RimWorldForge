@@ -1,0 +1,230 @@
+{
+  "file_count": 43,
+  "files": [
+    {
+      "bytes": 82,
+      "path": ".gitignore",
+      "sha256": "d6c03f6a454bcfcbcadbf93dea9e30010b46af864445043f0369671b8e8f1b4d"
+    },
+    {
+      "bytes": 1076,
+      "path": "CHANGELOG.md",
+      "sha256": "e85bb92d1f5c5f158da09f9f3a1e88cf10f3639572cf126d38bdec1cb35df03f"
+    },
+    {
+      "bytes": 1943,
+      "path": "FOUNDATION-REPORT.md",
+      "sha256": "6c29f96b4c8694f5a6ad09de41911f7b7316ded599c4df17a9d94a55aea8e80b"
+    },
+    {
+      "bytes": 1364,
+      "path": "Install.ps1",
+      "sha256": "758edabe42199f42e94e455ecff76754e5079fd85de196793c2e620c2c5b4e36"
+    },
+    {
+      "bytes": 1069,
+      "path": "LICENSE",
+      "sha256": "246c2d910945760aeeb5308aeffdbd9d8e873afd26df3ec9308f1ee8dd12e1da"
+    },
+    {
+      "bytes": 11365,
+      "path": "README.md",
+      "sha256": "2adaa9b8573ead0ecacfca90aa9599437ae6468790f382e3fd5dce271ce28ffd"
+    },
+    {
+      "bytes": 245,
+      "path": "START-HERE.bat",
+      "sha256": "94be487634eca373402b2fad2861f6af3091506d0b09ce9d731fa7a957a57ab7"
+    },
+    {
+      "bytes": 549,
+      "path": "Uninstall.ps1",
+      "sha256": "fd225ff374737f317cd1fecff32f0009bd117682d2cedcddeae7ed6ef176f6a9"
+    },
+    {
+      "bytes": 17,
+      "path": "VERSION.txt",
+      "sha256": "63108c0dd34f0d0df14b2fbd36a69981d0c9aee5333edf52cbbacc4143650b40"
+    },
+    {
+      "bytes": 2855,
+      "path": "docs/AGENT-WORKFLOW.md",
+      "sha256": "9d485f18625537b7d88ff317f150f2f6c0232028916b5da0756350c893965735"
+    },
+    {
+      "bytes": 2861,
+      "path": "docs/ARCHITECTURE.md",
+      "sha256": "7df94895a9215ffd61c4db57e29a8af16686e07f522489e2b18e42619e99de8a"
+    },
+    {
+      "bytes": 3453,
+      "path": "docs/ART-PIPELINE.md",
+      "sha256": "92bbf474404aee5eaf24080e761d2e91aa45a16608e4a0443bdec59e3fc1a026"
+    },
+    {
+      "bytes": 7562,
+      "path": "docs/CONTENT-RECIPES.md",
+      "sha256": "66ab801f5214a0733dcd8fba93923657b028229a14bc1b24432927c811fe11b4"
+    },
+    {
+      "bytes": 2478,
+      "path": "docs/EXTENDING.md",
+      "sha256": "39729706b95a24e7275bde4480de73c2fdcb75698827eb24294b0f96ff9c357b"
+    },
+    {
+      "bytes": 2950,
+      "path": "docs/MODDING-GUIDE.md",
+      "sha256": "04cc864bcd978583e46262541fc05b86936ff21c3b9cc61a2a475599ae33078f"
+    },
+    {
+      "bytes": 2488,
+      "path": "docs/RUNTIME-HARNESS-DESIGN.md",
+      "sha256": "95ca7d180c99404377f907a31a680144f1ca2d69ebe7ff6601eda1d9c6ada31f"
+    },
+    {
+      "bytes": 1679,
+      "path": "docs/VALIDATION.md",
+      "sha256": "bf256fef67602ffa8045d167ed14028368004a79cd7e899c097b527ed2831160"
+    },
+    {
+      "bytes": 1671,
+      "path": "examples/art/warden-concept.svg",
+      "sha256": "ef2fdadb11c84cb92a542e935bb6fcaedb8e13f7b9d1e8172907b5e0ed33a2ed"
+    },
+    {
+      "bytes": 1151,
+      "path": "examples/shark-xenotype.plan.json",
+      "sha256": "21b1c0e55a526b59f64b253a81f1192f70779f5d8640c89a75569364cb2bc20d"
+    },
+    {
+      "bytes": 2458,
+      "path": "examples/warden-mech.plan.json",
+      "sha256": "d933a004b737dad2125c6a34952d1ba71b6fbd8b97b8cedefdd83778811e8278"
+    },
+    {
+      "bytes": 2233,
+      "path": "integration/BUNDLE-INTEGRATION.md",
+      "sha256": "25655d81beb6c5aabc4790cfdf72af3c4fa0c085539eb769dc66865b8fcd756c"
+    },
+    {
+      "bytes": 1103,
+      "path": "integration/PROFILES.fragment.json",
+      "sha256": "7a0337e4a9635c34237af94864bb19994b73186ab28bd47a0cd26ebdca43727c"
+    },
+    {
+      "bytes": 2838,
+      "path": "knowledge/SOURCES.md",
+      "sha256": "7b1f16c41f06f70fdafb4eda3a49b7e75168ecb0ce2d7e6bde1becacb6d81009"
+    },
+    {
+      "bytes": 7320,
+      "path": "mcp_server/server.py",
+      "sha256": "5cd20eceb8b3d3381ce1ea138c8ae0306a6e351480d798eb50473ed8e173ab4b"
+    },
+    {
+      "bytes": 436,
+      "path": "pyproject.toml",
+      "sha256": "a824840478c679a84f85f63dda4f832236dff48f17f8d3db5836f855b2bffd8d"
+    },
+    {
+      "bytes": 2694,
+      "path": "schemas/project-plan.schema.json",
+      "sha256": "8890d917a3571fdcf3f1f71543542f49143191a57e0fc04c739a7d8dbfd0464e"
+    },
+    {
+      "bytes": 3004,
+      "path": "skills/rimworld-forge/SKILL.md",
+      "sha256": "9e8aa33be7db1a283c77183712e9dbfade9aa051ea62eb5db37043e6152dc15f"
+    },
+    {
+      "bytes": 62,
+      "path": "src/rwforge/__init__.py",
+      "sha256": "27ff95637411987173caac12d7e9cb93280c286649c0cc5292e848efaa16b730"
+    },
+    {
+      "bytes": 2249,
+      "path": "src/rwforge/assets.py",
+      "sha256": "f208b5ba567b8774ddd4f502e224772c1b0775b3f1928e92ae877993e1d6dfc0"
+    },
+    {
+      "bytes": 2712,
+      "path": "src/rwforge/blueprints.py",
+      "sha256": "2570ed8416d7f74229c936c8b8fbae19cf6b53331ce832e778e801efddb00b42"
+    },
+    {
+      "bytes": 3281,
+      "path": "src/rwforge/builder.py",
+      "sha256": "f41b5a2960dc54044970bed90f3a55619f1e3ec07c0b32a824bc45da4ae917be"
+    },
+    {
+      "bytes": 8155,
+      "path": "src/rwforge/cli.py",
+      "sha256": "ac4ebb10a7bc6f31d3cf874ca935a4d8bb97013837440eb9d37f5ca3ff839db4"
+    },
+    {
+      "bytes": 4013,
+      "path": "src/rwforge/csharp.py",
+      "sha256": "1ff563978d9a7a0ced42c66d280cae75d6efaeb146facc9acf57d8df057a54a7"
+    },
+    {
+      "bytes": 4869,
+      "path": "src/rwforge/discovery.py",
+      "sha256": "a2fb871f43d8ca688cc69b150ce9ab7a7c36de9deaa17824f2287d5b58968861"
+    },
+    {
+      "bytes": 8394,
+      "path": "src/rwforge/generator.py",
+      "sha256": "c9fdc8431f095704af9fa5b6478758564d98af98bd1837398b3d2c50ccef3139"
+    },
+    {
+      "bytes": 5084,
+      "path": "src/rwforge/indexer.py",
+      "sha256": "baf762b82a2ca4cf48f5adfbbd652879638a416d304988b726bd432b2e13767b"
+    },
+    {
+      "bytes": 1760,
+      "path": "src/rwforge/logs.py",
+      "sha256": "1499d82da8e5998dbda81f98119a3093d656742a3aabcfc27609e3303dc12c90"
+    },
+    {
+      "bytes": 3079,
+      "path": "src/rwforge/mods.py",
+      "sha256": "cc93f09eca19de1003d5e3f58632bd051d6fea274ac74f9c3af80329313a807b"
+    },
+    {
+      "bytes": 2946,
+      "path": "src/rwforge/project.py",
+      "sha256": "d26a327e7706f008473cbc6de877bc732127e9d2d0f2eb7e7374ccf89527c95b"
+    },
+    {
+      "bytes": 1651,
+      "path": "src/rwforge/util.py",
+      "sha256": "901f45ddc88a7611e1ae4b284b6f2cbfbd4e2dcca15b8f312be1bdea747ffb0e"
+    },
+    {
+      "bytes": 7697,
+      "path": "src/rwforge/validator.py",
+      "sha256": "8877a53fd1bc2b4b0866759ad8eba5eb03d6ff8d1f44e59a33ec1fbebc1e1f92"
+    },
+    {
+      "bytes": 380,
+      "path": "tests/run_tests.py",
+      "sha256": "7e9ccbc0142c2fe22afbc5b1f434dd8a38cd712e792d18f81a0bb8da3f7d2cd7"
+    },
+    {
+      "bytes": 6873,
+      "path": "tests/test_rwforge.py",
+      "sha256": "a8c10293108e1f1e868bc400d5849c2de14246c1034b11f58a8f24f4ba6a2474"
+    }
+  ],
+  "generated_date": "2026-08-29",
+  "schema": 1,
+  "verification": {
+    "cli_smoke": "passed",
+    "mcp_initialize_tools_list": "passed (11 tools)",
+    "python_compileall": "passed",
+    "real_rimworld_runtime": "not run in build environment",
+    "unit_tests": "7/7 passed"
+  },
+  "version": "0.1.0-foundation"
+}
