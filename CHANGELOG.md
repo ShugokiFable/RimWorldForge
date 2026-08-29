@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 - 2026-08-29
+
+- Installer now repairs the Hermes `rimworld` profile to match `roblox`/`skyrim`: junction `plugins` -> default `hermes/plugins`, seed all bundled skills (rimworld profile was stuck at 15 skills vs 247), and repair the truncated `config.yaml` so default plugins/skills show up. Keeps the `rimworldforge` MCP and mirrors default-profile MCPs (github/context7/headroom). Future installs are self-healing; existing broken profiles are patched in place.
+
 ## 0.2.0 - 2026-08-29
 
 Real-library hardening, proven against a 460+ mod Steam Workshop installation.

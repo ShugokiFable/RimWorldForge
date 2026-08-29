@@ -1,4 +1,4 @@
-# RimWorldForge 0.1.0 Foundation
+# RimWorldForge 0.2.1
 
 A local-first AI modding workbench for **RimWorld 1.6**. It is designed for agents that should create actual mods, inspect the game before inventing XML, validate what they wrote, package clean outputs, and report exactly what has and has not been proven.
 
