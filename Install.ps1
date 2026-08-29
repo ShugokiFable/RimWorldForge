@@ -7,7 +7,7 @@ $root = $PSScriptRoot
 if (-not $root) { $root = (Get-Location).Path }
 $py = Get-Command python -ErrorAction SilentlyContinue
 if (-not $py) { throw 'Python 3.10+ was not found on PATH.' }
-Write-Host '== RimWorldForge foundation install =='
+Write-Host '== RimWorldForge install =='
 Write-Host "root: $root"
 & $py.Source --version
 $venv = Join-Path $root '.venv'
@@ -22,14 +22,85 @@ if (-not $SkipTests) {
   & $vpy (Join-Path $root 'tests\run_tests.py')
   if ($LASTEXITCODE -ne 0) { throw "tests failed with exit code $LASTEXITCODE" }
 }
+
+$serverPy = Join-Path $root 'mcp_server\server.py'
+$skillSrc = Join-Path $root 'skills\rimworld-forge'
+$mcpBlock = @"
+mcp_servers:
+  rimworldforge:
+    command: $($root.Replace('\','/'))/.venv/Scripts/python.exe
+    args:
+      - $($serverPy.Replace('\','/'))
+    enabled: true
+    connect_timeout: 30
+"@
+
+# --- Hermes: dedicated rimworld profile (MCP lives there, not globally) ---
+$hermes = Get-Command hermes -ErrorAction SilentlyContinue
+if ($hermes) {
+  Write-Host ''
+  Write-Host '== Hermes profile =='
+  $existing = & hermes profile list 2>$null | Out-String
+  if ($existing -match '(?m)^\s*rimworld\s') {
+    Write-Host 'profile rimworld already exists - refreshing MCP entry if needed'
+  } else {
+    & hermes profile create rimworld --description 'RimWorld 1.6 modding with RimWorldForge: Def indexing across the game plus installed Workshop mods, mod generation/validation/builds, and Player.log diagnosis. MCP is rimworldforge-only so token cost stays minimal.'
+    if ($LASTEXITCODE -ne 0) { Write-Warning 'hermes profile create failed; skipping Hermes wiring' }
+  }
+  $cfg = Join-Path $env:LOCALAPPDATA 'hermes\profiles\rimworld\config.yaml'
+  if (Test-Path $cfg) {
+    $cfgText = Get-Content $cfg -Raw
+    if ($cfgText -notmatch 'rimworldforge:') {
+      Add-Content -Path $cfg -Value "`n$mcpBlock" -Encoding utf8
+      Write-Host "wrote rimworldforge MCP -> $cfg"
+    } else {
+      Write-Host 'rimworldforge MCP already in profile config'
+    }
+  }
+  $profSkills = Join-Path $env:LOCALAPPDATA "hermes\profiles\rimworld\skills\rimworld-forge"
+  if ((Test-Path (Join-Path $env:LOCALAPPDATA 'hermes\profiles\rimworld')) -and -not (Test-Path $profSkills)) {
+    Copy-Item $skillSrc $profSkills -Recurse
+    Write-Host 'skill installed into rimworld profile'
+  }
+  Write-Host 'use it with:  rimworld  (wrapper) or  hermes -p rimworld'
+} else {
+  Write-Host 'hermes CLI not found - skipped Hermes profile'
+}
+
+# --- Claude Code: user-scope MCP + skill copy ---
+$claude = Get-Command claude -ErrorAction SilentlyContinue
+if ($claude) {
+  Write-Host ''
+  Write-Host '== Claude Code =='
+  & claude mcp add --scope user rimworldforge -- $vpy $serverPy 2>$null
+  if ($LASTEXITCODE -eq 0) { Write-Host 'added rimworldforge MCP (user scope)' } else { Write-Host 'rimworldforge MCP already registered or add failed' }
+  $ccSkills = Join-Path $env:USERPROFILE '.claude\skills\rimworld-forge'
+  if (-not (Test-Path $ccSkills)) {
+    New-Item -ItemType Directory -Force -Path (Split-Path $ccSkills) | Out-Null
+    Copy-Item $skillSrc $ccSkills -Recurse
+    Write-Host 'skill installed into ~/.claude/skills'
+  }
+} else {
+  Write-Host 'claude CLI not found - skipped Claude Code wiring'
+}
+
+# --- Codex CLI: no project-scoped MCP config exists; skill file for reference ---
+$codexDir = Join-Path $env:USERPROFILE '.codex'
+if (Test-Path $codexDir) {
+  $cxSkills = Join-Path $codexDir 'skills\rimworld-forge'
+  if (-not (Test-Path $cxSkills)) {
+    New-Item -ItemType Directory -Force -Path (Split-Path $cxSkills) | Out-Null
+    Copy-Item $skillSrc $cxSkills -Recurse
+    Write-Host ''
+    Write-Host '== Codex == skill copied to ~/.codex/skills (Codex has no native MCP project scope; point it at the server command manually if wanted)'
+  }
+}
+
 Write-Host ''
-Write-Host 'Installed. Useful commands:'
+Write-Host 'Installed. Quick start:'
 Write-Host "  $vpy -m rwforge.cli doctor"
-Write-Host "  $vpy -m rwforge.cli index"
+Write-Host "  $vpy -m rwforge.cli index      # auto-discovers game + all Steam libraries"
 Write-Host "  $vpy -m rwforge.cli capabilities"
 Write-Host ''
-Write-Host 'MCP command (keep disabled outside RimWorld work):'
-Write-Host "  $vpy $(Join-Path $root 'mcp_server\server.py')"
-Write-Host ''
-Write-Host 'Agent skill source:'
-Write-Host "  $(Join-Path $root 'skills\rimworld-forge\SKILL.md')"
+Write-Host 'Standalone MCP command (register only where you need it):'
+Write-Host "  $vpy $serverPy"

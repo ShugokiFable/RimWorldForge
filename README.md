@@ -76,19 +76,31 @@ The first design rule is **inspect before inventing**. RimWorld's Defs map direc
 
 Requirements: Windows 10/11, macOS, or Linux; Python 3.10+; RimWorld 1.6 for game-aware operations.
 
-### Windows
+### One click (Windows)
 
-```powershell
-.\Install.ps1
-```
-
-or double-click:
+Double-click:
 
 ```text
 START-HERE.bat
 ```
 
-The installer creates `.venv`, installs RimWorldForge in editable mode, runs tests, and prints the exact CLI/MCP commands. It does not edit RimWorld, your active mod list, or saves.
+or run:
+
+```powershell
+.\Install.ps1
+```
+
+The installer creates `.venv`, installs RimWorldForge, runs its self-tests, and then wires
+up every agent CLI it finds on the machine:
+
+| Agent | What it does |
+|---|---|
+| **Hermes** | Creates a dedicated `rimworld` profile (`hermes -p rimworld` / `rimworld` wrapper) with the rimworldforge MCP server enabled **only in that profile** and the skill installed — zero token cost in other profiles |
+| **Claude Code** | Registers the MCP at user scope (`claude mcp add --scope user`) and installs the skill |
+| **Codex CLI** | Copies the skill to `~/.codex/skills` (Codex has no project-scoped MCP config; point it at the server command manually if wanted) |
+
+Nothing is registered globally that wasn't already there, no RimWorld files, mod lists or
+saves are touched, and `Uninstall.ps1` reverses all of it.
 
 ### Manual
 

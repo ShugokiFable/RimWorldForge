@@ -1,8 +1,29 @@
 [CmdletBinding(SupportsShouldProcess=$true)]
-param()
+param(
+  # Installer may have registered the MCP in Claude Code's USER config (machine-wide).
+  # Remove it by default; keep with -KeepMcp.
+  [switch]$KeepMcp
+)
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
 if (-not $root) { $root = (Get-Location).Path }
+
+if (-not $KeepMcp) {
+  $claude = Get-Command claude -ErrorAction SilentlyContinue
+  if ($claude) {
+    & claude mcp remove --scope user rimworldforge 2>$null
+    if ($LASTEXITCODE -eq 0) { Write-Host 'removed rimworldforge MCP from Claude Code user config' }
+  }
+}
+
+foreach ($skill in @(
+  (Join-Path $env:USERPROFILE '.claude\skills\rimworld-forge'),
+  (Join-Path $env:USERPROFILE '.codex\skills\rimworld-forge'),
+  (Join-Path $env:LOCALAPPDATA 'hermes\profiles\rimworld\skills\rimworld-forge')
+)) {
+  if (Test-Path $skill) { Remove-Item -LiteralPath $skill -Recurse -Force; Write-Host "removed $skill" }
+}
+
 $venv = Join-Path $root '.venv'
 if (Test-Path $venv) {
   if ($PSCmdlet.ShouldProcess($venv, 'Remove RimWorldForge local virtual environment')) {
