@@ -6,3 +6,4 @@ Workspaces/
 build/
 dist/
 *.egg-info/
+$LOCALAPPDATA/
