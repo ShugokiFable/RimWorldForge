@@ -92,10 +92,62 @@ if ($hermes) {
       Write-Host 'rimworldforge MCP already in profile config'
     }
   }
+  # --- Repair profile plumbing so it matches roblox/skyrim (junction + full bundled skills + full config) ---
+  $profRoot = Join-Path $env:LOCALAPPDATA 'hermes\profiles\rimworld'
+  $defaultPlugins = Join-Path $env:LOCALAPPDATA 'hermes\plugins'
+  $profPlugins = Join-Path $profRoot 'plugins'
+  try {
+    $linkType = $null; try { $linkType = (Get-Item $profPlugins -ErrorAction Stop).LinkType } catch {}
+    if (-not $linkType) {
+      if (Test-Path $profPlugins) { Remove-Item $profPlugins -Recurse -Force }
+      New-Item -ItemType Junction -Path $profPlugins -Target $defaultPlugins | Out-Null
+      Write-Host "fixed plugins junction -> $defaultPlugins"
+    }
+  } catch { Write-Warning "could not fix plugins junction: $_" }
+
+  # Seed missing bundled skills from a healthy profile (skyrim/roblox) or the default store
+  try {
+    $profSkillsDir = Join-Path $profRoot 'skills'
+    $seedSrc = $null
+    foreach ($cand in @((Join-Path $env:LOCALAPPDATA 'hermes\profiles\skyrim\skills'), (Join-Path $env:LOCALAPPDATA 'hermes\profiles\roblox\skills'), (Join-Path $env:LOCALAPPDATA 'hermes\skills'))) {
+      if (Test-Path $cand) { $seedSrc = $cand; break }
+    }
+    if ($seedSrc) {
+      $missing = Compare-Object (Get-ChildItem $seedSrc -Name) (Get-ChildItem $profSkillsDir -Name) | Where-Object { $_.SideIndicator -eq '<=' } | ForEach-Object { $_.InputObject }
+      foreach ($m in $missing) {
+        Copy-Item (Join-Path $seedSrc $m) (Join-Path $profSkillsDir $m) -Recurse -Force
+      }
+      if ($missing) { Write-Host "seeded $($missing.Count) missing skills from $seedSrc" }
+    }
+  } catch { Write-Warning "skill seeding failed: $_" }
+
+  # If config is still the old truncated shape (missing terminal/browser/compression etc.), repair from skyrim template keeping rimworldforge MCP
+  try {
+    $skyrimCfg = Join-Path $env:LOCALAPPDATA 'hermes\profiles\skyrim\config.yaml'
+    if ((Test-Path $skyrimCfg) -and (Test-Path $cfg)) {
+      $cur = Get-Content $cfg -Raw
+      if ($cur -notmatch '(?m)^terminal:' -or $cur -notmatch '(?m)^compression:') {
+        $sky = Get-Content $skyrimCfg -Raw
+        $mcpBlockCurrent = $null
+        if ($cur -match '(?ms)^mcp_servers:\r?\n.*?(?=^platform_toolsets:)') { $mcpBlockCurrent = $Matches[0] -replace 'platform_toolsets:$','' }
+        if (-not $mcpBlockCurrent) { $mcpBlockCurrent = "mcp_servers:`n  rimworldforge:`n    command: $($root.Replace('\','/'))/.venv/Scripts/python.exe`n    args:`n      - $($serverPy.Replace('\','/'))`n    enabled: true`n    connect_timeout: 30`n" }
+        $skyPatched = $sky -replace '(?ms)^mcp_servers:\r?\n.*?(?=^platform_toolsets:)', $mcpBlockCurrent
+        if ($skyPatched -notmatch 'rimworldforge:') { $skyPatched = $sky -replace '(?ms)^mcp_servers:\r?\n.*?(?=^platform_toolsets:)', $mcpBlockCurrent }
+        Set-Content -Path $cfg -Value $skyPatched -Encoding utf8
+        Write-Host "repaired truncated config.yaml from skyrim template (kept rimworldforge MCP)"
+      }
+    }
+  } catch { Write-Warning "config repair skipped: $_" }
+
   $profSkills = Join-Path $env:LOCALAPPDATA "hermes\profiles\rimworld\skills\rimworld-forge"
   if ((Test-Path (Join-Path $env:LOCALAPPDATA 'hermes\profiles\rimworld')) -and -not (Test-Path $profSkills)) {
     Copy-Item $skillSrc $profSkills -Recurse
     Write-Host 'skill installed into rimworld profile'
+  } else {
+    # refresh from repo so profile stays current even if it already exists
+    if (Test-Path $profSkills) { Remove-Item $profSkills -Recurse -Force }
+    Copy-Item $skillSrc $profSkills -Recurse
+    Write-Host 'skill refreshed into rimworld profile'
   }
   Write-Host 'use it with:  rimworld  (wrapper) or  hermes -p rimworld'
 } else {
