@@ -51,8 +51,43 @@ if ($hermes) {
   if (Test-Path $cfg) {
     $cfgText = Get-Content $cfg -Raw
     if ($cfgText -notmatch 'rimworldforge:') {
-      Add-Content -Path $cfg -Value "`n$mcpBlock" -Encoding utf8
-      Write-Host "wrote rimworldforge MCP -> $cfg"
+      # Base the profile on the defaults the user already has: mirror the MCP servers
+      # enabled in their default profile (minus any rimworldforge entry), then add
+      # rimworldforge. Falls back to forge-only if the default config has none.
+      $defaultCfg = Join-Path $env:LOCALAPPDATA 'hermes\config.yaml'
+      $extraServers = ''
+      if (Test-Path $defaultCfg) {
+        try {
+          $defText = Get-Content $defaultCfg -Raw
+          $blockLines = @()
+          $inBlock = $false
+          foreach ($line in ($defText -split "`r?`n")) {
+            if ($line -match '^mcp_servers:\s*$') { $inBlock = $true; continue }
+            if ($inBlock) {
+              if ($line -match '^\s') { $blockLines += $line } else { break }
+            }
+          }
+          $current = $null
+          $entries = [ordered]@{}
+          foreach ($line in $blockLines) {
+            if ($line -match '^  ([A-Za-z0-9_.-]+):\s*$') {
+              $current = $Matches[1]
+              if (-not $entries.Contains($current)) { $entries[$current] = New-Object System.Collections.Generic.List[string] }
+              if ($current -ne 'rimworldforge') { $entries[$current].Add($line) }
+            } elseif ($null -ne $current) {
+              if ($current -ne 'rimworldforge') { $entries[$current].Add($line) }
+            }
+          }
+          foreach ($name in $entries.Keys) {
+            if ($name -eq 'rimworldforge') { continue }
+            if ($cfgText -match ('^\s*' + [regex]::Escape($name) + ':')) { continue }
+            $extraServers += "`n" + ($entries[$name] -join "`n")
+          }
+        } catch { Write-Host 'could not mirror default-profile MCPs; continuing with forge-only' }
+      }
+      Add-Content -Path $cfg -Value "`n$mcpBlock$extraServers" -Encoding utf8
+      $mirrored = @($entries.Keys | Where-Object { $_ -ne 'rimworldforge' }).Count
+      Write-Host "wrote rimworldforge MCP (+$mirrored mirrored servers) -> $cfg"
     } else {
       Write-Host 'rimworldforge MCP already in profile config'
     }

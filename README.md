@@ -95,7 +95,7 @@ up every agent CLI it finds on the machine:
 
 | Agent | What it does |
 |---|---|
-| **Hermes** | Creates a dedicated `rimworld` profile (`hermes -p rimworld` / `rimworld` wrapper) with the rimworldforge MCP server enabled **only in that profile** and the skill installed — zero token cost in other profiles |
+| **Hermes** | Creates a dedicated `rimworld` profile (`hermes -p rimworld` / `rimworld` wrapper) with the rimworldforge MCP server enabled **only in that profile** and the skill installed — zero token cost in other profiles. The installer also mirrors the MCP servers already enabled in your **default** Hermes profile into it, so the RimWorld profile keeps your usual tools (github, context7, …) alongside the forge |
 | **Claude Code** | Registers the MCP at user scope (`claude mcp add --scope user`) and installs the skill |
 | **Codex CLI** | Copies the skill to `~/.codex/skills` (Codex has no project-scoped MCP config; point it at the server command manually if wanted) |
 
